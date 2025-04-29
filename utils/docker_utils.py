@@ -50,7 +50,7 @@ class DockerUtils:
             image_name = 'sd-webui-180:1'
         else:
             image_name = image
-
+        print(f"image_name: {image_name}, port:{port}, name:{container_name}")
 
         try:
             container = docker_client.containers.run(
