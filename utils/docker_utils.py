@@ -139,7 +139,7 @@ class DockerUtils:
             all_containers = DockerUtils.get_all_running_containers()
             # 已经没有了，直接返回
             if container_name not in all_containers:
-                return True
+                return True,""
             container = docker_client.containers.get(container_name)
             container.stop()
             # container.remove()
