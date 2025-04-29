@@ -35,6 +35,14 @@ async def get_containers_free_time(name: str):
         "is_running": is_running,
         "free": free_time
     })
+@router.get('/instances/freetime')
+async def get_instances_free_time():
+    """
+    获取实例的空闲时间,没有一个运行的 docker 开始算空闲
+    :return:
+    """
+    free_time = DockerUtils.get_instances_free_time()
+    return resp_success(data=free_time)
 
 
 @router.get('/containers/all/running')

@@ -1,4 +1,9 @@
+import os.path
+from datetime import datetime
+
 import docker
+
+from utils.resp import resp_success
 
 docker_client = docker.from_env()
 
@@ -29,15 +34,35 @@ class DockerUtils:
             if container.status == "running":
                 running_containers.append(container.name)
 
-        if len(running_containers) == 0:
-            # TODO 记录没有容器的时间
-            pass
         return running_containers
+
+    @staticmethod
+    def get_instances_free_time():
+        free_time = 0
+        free_tag_path = os.path.join(os.path.expanduser('~'), "free_tag.txt")
+        containers = docker_client.containers.list(all=True)
+        running_containers = []
+        for container in containers:
+            if container.status == "running":
+                running_containers.append(container.name)
+
+        # 判断容器是否在运行
+        if len(running_containers) == 0:
+            if not os.path.exists(free_tag_path):
+                open(free_tag_path, 'w').close()
+            modification_time = os.path.getmtime(free_tag_path)
+            current_time = datetime.now().timestamp()
+            free_time = int(current_time - modification_time)
+        else:
+            if os.path.exists(free_tag_path):
+                os.remove(free_tag_path)
+
+        return free_time
 
     @staticmethod
     def create_container(image, port, container_name):
         """
-        创建容器
+        创建容器,幂等。同一个容器名不会重复创建
         :param image:
         :param port:
         :param container_name:
@@ -142,7 +167,7 @@ class DockerUtils:
                 return True, ""
             container = docker_client.containers.get(container_name)
             container.stop(timeout=1)
-            #container.remove()
+            # container.remove()
             return True, ""
         except Exception as e:
             print(f"APIError: {e}")
