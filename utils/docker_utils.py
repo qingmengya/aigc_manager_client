@@ -46,8 +46,11 @@ class DockerUtils:
         image_name = 'sd-webui-180:1'
         if image == 'sd-webui-1.6.0':
             image_name = 'sd-webui-180:1'
-        if image == 'sd-webui-1.10.1':
+        elif image == 'sd-webui-1.10.1':
             image_name = 'sd-webui-180:1'
+        else:
+            image_name = image
+
 
         try:
             container = docker_client.containers.run(
