@@ -57,7 +57,7 @@ class DockerUtils:
                 image=image_name,
                 name=container_name,
                 detach=True,
-                ports={f"{port}/tcp": 9965},
+                ports={f"{port}/tcp": port},
                 volumes={
                     "/mnt/sdwebui_public/public/models/Stable-diffusion/": {
                         "bind": "/home/stable-diffusion-webui/models/Stable-diffusion",
@@ -126,7 +126,7 @@ class DockerUtils:
                 ],
                 privileged=True,
                 remove=True,
-                command="/home/miniconda3/envs/sd_python310/bin/python launch.py --port 9965"
+                command=f"/home/miniconda3/envs/sd_python310/bin/python launch.py --port {port}"
             )
             return True, ""
         except Exception as e:
