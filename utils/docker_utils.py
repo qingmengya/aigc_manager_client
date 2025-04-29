@@ -142,7 +142,7 @@ class DockerUtils:
                 return True, ""
             container = docker_client.containers.get(container_name)
             container.stop(timeout=1)
-            container.remove()
+            #container.remove()
             return True, ""
         except Exception as e:
             print(f"APIError: {e}")
