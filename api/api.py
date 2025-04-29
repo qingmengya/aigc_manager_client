@@ -22,7 +22,7 @@ async def get_containers_free_time(name: str):
     """
     is_running, container_id = DockerUtils.get_container_status_and_id(name)
     free_time = 99999999
-    path = os.path.join('/var/lib/docker/containers', name, f'{container_id}-json.log')
+    path = os.path.join('/var/lib/docker/containers', container_id, f'{container_id}-json.log')
     print(path)
     is_exists = os.path.exists(path)
     if is_exists:
