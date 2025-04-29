@@ -28,7 +28,7 @@ async def get_containers_free_time(name: str):
     if is_exists:
         modification_time = os.path.getmtime(path)
         current_time = datetime.now().timestamp()
-        free_time = current_time - modification_time
+        free_time = int(current_time - modification_time)
 
     return resp_success(data={
         "name": name,
