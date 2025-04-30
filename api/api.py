@@ -35,6 +35,8 @@ async def get_containers_free_time(name: str):
         "is_running": is_running,
         "free": free_time
     })
+
+
 @router.get('/instances/freetime')
 async def get_instances_free_time():
     """
@@ -86,3 +88,8 @@ async def delete_container(name: str):
     if ok:
         return resp_success(data=name)
     return resp_failed(data=None, message=msg)
+
+
+@router.get('/containers/health')
+async def get_containers_health():
+    return resp_success(data=DockerUtils.is_docker_running())

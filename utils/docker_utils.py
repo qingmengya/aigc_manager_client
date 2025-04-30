@@ -172,3 +172,16 @@ class DockerUtils:
         except Exception as e:
             print(f"APIError: {e}")
             return False, f"删除容器失败：{e}"
+
+    @staticmethod
+    def is_docker_running():
+        """
+        查看 docker 是否启动
+        :return:
+        """
+        try:
+            docker_client.ping()
+            return True
+        except Exception as e:
+            print(f"APIError: {e}")
+            return False
