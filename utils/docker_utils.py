@@ -151,6 +151,7 @@ class DockerUtils:
                 ],
                 privileged=True,
                 remove=True,
+                hostname=container_name,
                 command=f"/home/miniconda3/envs/sd_python310/bin/python launch.py --port {port}"
             )
             return True, ""
