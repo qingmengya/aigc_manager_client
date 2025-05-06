@@ -68,13 +68,13 @@ class DockerUtils:
         :param container_name:
         :return:
         """
-        image_name = 'sd-webui-180:1'
-        if image == 'sd-webui-1.6.0':
-            image_name = 'sd-webui-180:1'
-        elif image == 'sd-webui-1.10.1':
-            image_name = 'sd-webui-180:1'
-        else:
-            image_name = image
+        image_name = 'sd-webui:1101'
+        # if image == 'sd-webui-1.6.0':
+        #     image_name = 'sd-webui-180:1'
+        # elif image == 'sd-webui-1.10.1':
+        #     image_name = 'sd-webui-180:1'
+        # else:
+        #     image_name = image
         print(f"image_name: {image_name}, port:{port}, name:{container_name}")
 
         try:
