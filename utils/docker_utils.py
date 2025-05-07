@@ -56,6 +56,7 @@ class DockerUtils:
         else:
             if os.path.exists(free_tag_path):
                 os.remove(free_tag_path)
+        print(f"free_time⌛️: {free_time}")
 
         return free_time
 
