@@ -1,3 +1,4 @@
+import json
 import os.path
 from datetime import datetime
 from fastapi import APIRouter
@@ -69,8 +70,8 @@ async def get_container_logs(name: str):
     path = os.path.join('/var/lib/docker/containers', container_id, f'{container_id}-json.log')
     is_exists = os.path.exists(path)
     if is_exists:
-        logs = open(path, 'r').read()
-        logs = logs.split('\n')[-1000:]
+        with open(path, 'r') as f:
+            logs = json.loads(f.read())
         return resp_success(data=logs)
     return resp_failed(data=None, message='暂未找到日志')
 
