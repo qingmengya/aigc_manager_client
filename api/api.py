@@ -46,6 +46,34 @@ async def get_instances_free_time():
     free_time = DockerUtils.get_instances_free_time()
     return resp_success(data=free_time)
 
+@router.put('/containers/restart/{name}')
+async def restart_container(name: str):
+    """
+    重启容器
+    :param name:
+    :return:
+    """
+    ok, msg = DockerUtils.restart_container(name)
+    if ok:
+        return resp_success(data=name)
+    return resp_failed(data=None, message=msg)
+
+@router.get('/containers/logs/{name}')
+async def get_container_logs(name: str):
+    """
+    获取容器的日志
+    :param name:
+    :return:
+    """
+    is_running, container_id = DockerUtils.get_container_status_and_id(name)
+    path = os.path.join('/var/lib/docker/containers', container_id, f'{container_id}-json.log')
+    is_exists = os.path.exists(path)
+    if is_exists:
+        logs = open(path, 'r').read()
+        logs = logs.split('\n')[-1000:]
+        return resp_success(data=logs)
+    return resp_failed(data=None, message='暂未找到日志')
+
 
 @router.get('/containers/all/running')
 async def get_containers():

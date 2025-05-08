@@ -61,6 +61,10 @@ class DockerUtils:
         return free_time
 
     @staticmethod
+    def restart_container(container_name):
+        docker_client.containers.get(container_name).restart()
+
+    @staticmethod
     def create_container(image, port, container_name):
         """
         创建容器,幂等。同一个容器名不会重复创建
