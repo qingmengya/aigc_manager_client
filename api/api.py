@@ -71,7 +71,7 @@ async def get_container_logs(name: str):
     is_exists = os.path.exists(path)
     if is_exists:
         with open(path, 'r') as f:
-            logs = json.loads(f.read())
+            logs = json.load(f)
         return resp_success(data=logs)
     return resp_failed(data=None, message='暂未找到日志')
 
