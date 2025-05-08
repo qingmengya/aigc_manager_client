@@ -70,9 +70,15 @@ async def get_container_logs(name: str):
     path = os.path.join('/var/lib/docker/containers', container_id, f'{container_id}-json.log')
     is_exists = os.path.exists(path)
     if is_exists:
+        logs_content = []
         with open(path, 'r') as f:
-            logs = json.load(f)
-        return resp_success(data=logs)
+            for line in f:
+                try:
+                    logs_content.append(json.loads(line))
+                except json.JSONDecodeError:
+                    # 忽略无法解析的行
+                    pass
+        return resp_success(data=logs_content)
     return resp_failed(data=None, message='暂未找到日志')
 
 
