@@ -1,77 +1,137 @@
 # AIGC Manager Client
 
-这是一个用于获取Docker容器运行日志的FastAPI应用。
+## 项目概述
 
-## 功能
+AIGC Manager Client 是一个用于管理Docker容器的FastAPI应用程序，专为AI生成内容(AIGC)服务设计。该客户端提供了一套完整的API接口，用于创建、重启、停止容器，以及监控容器的运行状态和空闲时间。
 
-- 获取所有Docker容器列表
-- 获取指定Docker容器的运行日志
+## 功能特性
 
-## 安装
+- 容器管理：创建、重启、停止Docker容器
+- 状态监控：查询容器运行状态和空闲时间
+- 实例监控：监控服务器实例的空闲时间
+- RESTful API：提供标准化的API接口
+
+## 技术栈
+
+- **FastAPI**: 高性能的Python Web框架
+- **Uvicorn**: ASGI服务器
+- **Docker SDK for Python**: 用于与Docker引擎交互
+
+## 安装指南
+
+### 前提条件
+
+- Python 3.10+
+- Docker
+
+### 安装步骤
 
 1. 克隆仓库
 
-2. 安装依赖
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+git clone <repository-url>
+cd aigc_manager_client
+```
 
-## 运行
+2. 安装依赖
+
+```bash
+pip install -r requirements.txt
+```
+
+## 使用方法
+
+### 启动服务
 
 ```bash
 python main.py
 ```
 
-服务器将在 `http://localhost:8000` 启动。
-
-## API文档
-
-启动服务后，可以访问以下URL查看API文档：
-- Swagger UI: `http://localhost:8000/docs`
-- ReDoc: `http://localhost:8000/redoc`
-
-## API端点
-
-### 获取所有Docker容器
-
-```
-GET /api/docker/containers
-```
-
-返回所有Docker容器的列表，包括运行中和已停止的容器。
-
-### 获取容器日志
-
-```
-GET /api/docker/logs/{container_id}
-```
-
-参数：
-- `container_id`: Docker容器ID或名称
-- `tail`: (可选) 获取最后N行日志，默认为100
-- `since`: (可选) 获取指定时间后的日志，格式为ISO时间或相对时间，如'1h'
-
-## 示例
-
-### 获取所有容器
+或者使用提供的脚本：
 
 ```bash
-curl http://localhost:8000/api/docker/containers
+./run.sh
 ```
 
-### 获取指定容器的最近50行日志
+服务将在 `http://0.0.0.0:9960` 上启动，并提供API访问。
 
-```bash
-curl "http://localhost:8000/api/docker/logs/container_id?tail=50"
+### API文档
+
+启动服务后，可以通过访问 `http://localhost:9960/docs` 查看自动生成的API文档。
+
+## API接口说明
+
+### 容器管理
+
+#### 获取容器空闲时间
+
+```
+GET /api/containers/freetime/{name}
 ```
 
-### 获取指定容器过去1小时的日志
+返回指定容器的运行状态和空闲时间（秒）。
 
-```bash
-curl "http://localhost:8000/api/docker/logs/container_id?since=1h"
+#### 重启容器
+
+```
+PUT /api/containers/restart/{name}
 ```
 
-## 注意事项
+重启指定名称的容器。
 
-- 需要在运行此应用的机器上安装Docker
-- 运行此应用的用户需要有访问Docker守护进程的权限
+#### 创建容器
+
+```
+POST /api/containers/create
+```
+
+请求体：
+```json
+{
+  "image": "镜像名称",
+  "port": 端口号,
+  "container_name": "容器名称"
+}
+```
+
+### 实例监控
+
+#### 获取实例空闲时间
+
+```
+GET /api/instances/freetime
+```
+
+返回服务器实例的空闲时间（当没有运行中的容器时开始计算）。
+
+## 项目结构
+
+```
+aigc_manager_client/
+├── api/                # API接口定义
+│   ├── __init__.py
+│   ├── api.py          # API实现
+│   └── router.py       # 路由注册
+├── models/             # 数据模型
+│   ├── __init__.py
+│   └── api_models.py   # API请求/响应模型
+├── utils/              # 工具类
+│   ├── __init__.py
+│   ├── docker_utils.py # Docker操作工具
+│   └── resp.py         # 响应格式化工具
+├── main.py             # 应用入口
+├── requirements.txt    # 项目依赖
+└── run.sh              # 启动脚本
+```
+
+## 开发指南
+
+### 添加新的API接口
+
+1. 在 `api/api.py` 中定义新的路由和处理函数
+2. 如需新的请求/响应模型，在 `models/api_models.py` 中定义
+3. 如需新的Docker操作，在 `utils/docker_utils.py` 中实现
+
+## 许可证
+
+[MIT](LICENSE)
