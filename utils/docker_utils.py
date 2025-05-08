@@ -62,7 +62,12 @@ class DockerUtils:
 
     @staticmethod
     def restart_container(container_name):
-        docker_client.containers.get(container_name).restart()
+        try:
+            docker_client.containers.get(container_name).restart()
+            return True,""
+        except Exception as e:
+            print(f"APIError: {e}")
+            return False, str(e)
 
     @staticmethod
     def create_container(image, port, container_name):
