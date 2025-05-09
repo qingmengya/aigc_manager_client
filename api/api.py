@@ -102,10 +102,20 @@ async def create_container(request: CreateContainerReq):
     image = request.image
     port = request.port
     container_name = request.container_name
+    if image == "SD-1.10.1":
+        image = 'sd-webui:1101'
+    elif image == "SD-1.8.0":
+        image = 'sd-webui:180'
+    elif image == "SD-1.6.0":
+        image = 'sd-webui:160'
+    else:
+        image = 'sd-webui:180'
+
     # 如果已经是存在且运行，就直接返回就行了。保证幂等
     all_containers = DockerUtils.get_all_running_containers()
     if all_containers and container_name in all_containers:
         return resp_success(data=container_name)
+
     ok, msg = DockerUtils.create_container(image, port, container_name)
     if ok:
         return resp_success(data=container_name)
